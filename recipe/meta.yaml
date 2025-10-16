@@ -6,21 +6,21 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/editor-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: bb6989e872638cd119db9a4fce284cd8e13c553886a1c044c6b8d8a160c871f8
 
 build:
-  noarch: python
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 2
+  number: 0
+  skip: true  # [py<38]
 
 requirements:
   host:
-    - python {{ python_min }}
+    - python
     - poetry-core
     - pip
   run:
-    - python >={{ python_min }}
+    - python
     - runs
     - xmod
 
@@ -29,15 +29,21 @@ test:
     - editor
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    # Cannot run upstream tests due to lack of 'tdir' package
+    # - pytest -v test_editor.py
   requires:
     - pip
-    - python {{ python_min }}
 
 about:
   home: https://github.com/rec/editor
-  summary: 🖋 Open the default text editor 🖋
+  summary: Open the default text editor
+  description: Open the default text editor.
   license: MIT
+  license_family: MIT
   license_file: LICENSE
+  dev_url: https://github.com/rec/editor
+  doc_url: https://rec.github.io/editor
 
 extra:
   recipe-maintainers:
