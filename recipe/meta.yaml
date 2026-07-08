@@ -2,7 +2,7 @@
 {% set version = "1.8.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
@@ -12,12 +12,12 @@ source:
 build:
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
-  skip: true  # [py<38]
+  skip: true  # [py<310]
 
 requirements:
   host:
     - python
-    - poetry-core
+    - hatchling
     - pip
   run:
     - python
@@ -31,7 +31,7 @@ test:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     # Cannot run upstream tests due to lack of 'tdir' package
-    # - pytest -v test_editor.py
+    #- pytest -vv test_editor.py
   requires:
     - pip
 
